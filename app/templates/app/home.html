@@ -1,10 +1,20 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>tôi là một thằng tồi</h1>
-</body>
-</html>
+{% extends 'app/base.html' %}
+{% load static %}
+{% block banner_slider %}
+
+{% endblock banner_slider %}
+<!---->
+{% block extra-js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var carousel = new bootstrap.Carousel(document.querySelector('.carousel'), {
+      interval: 2000 // Interval in milliseconds
+    });
+  });
+  </script>  
+{% endblock extra-js %}
+<!---->
+{% block main-content %} 
+
+<br /> <br /> <br /> <br /> 
+{% endblock main-content %}
