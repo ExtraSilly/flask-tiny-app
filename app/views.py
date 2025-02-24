@@ -9,17 +9,34 @@ from django.contrib import messages
 # Create your views here.
 
 def register(request):
+    if request.user.is_authenticated:
+        customer = request.user
+        user_not_login = "hidden"
+        user_login = "show"
+    else:
+        items = []
+        user_not_login = "show"
+        user_login = "hidden"
+    
     form = CreateUserForm()
     
     if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-    context = {'form': form}
+    
+
+    context = {'form': form,'user_not_login':user_not_login,'user_login':user_login}
     return render(request, 'app/register.html',context)
 def loginPage(request):
     if request.user.is_authenticated:
+        user_not_login = "hidden"
+        user_login = "show"
         return redirect('home')
+    else:
+        items = []
+        user_not_login = "show"
+        user_login = "hidden"
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -30,14 +47,22 @@ def loginPage(request):
         else:
             messages.info(request,'Username or Password is incorrect')
 
-    context = {}
+    context = {'user_not_login':user_not_login,'user_login':user_login}
     return render(request, 'app/login.html',context)
 def logoutPage(request):
     logout(request)
     return redirect('login')
+
 def home(request):
-    
-    context = {}
+    if request.user.is_authenticated:
+        customer = request.user
+        user_not_login = "hidden"
+        user_login = "show"
+    else:
+        items = []
+        user_not_login = "show"
+        user_login = "hidden"
+    context = {'user_not_login':user_not_login,'user_login':user_login}
     return render(request, 'app/home.html',context)
 
 def cart(request):
@@ -55,3 +80,4 @@ def saved(request):
     context = {'items':items,'order':order}
     
     return render(request, 'app/saved.html', context)
+

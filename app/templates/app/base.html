@@ -77,22 +77,15 @@
               </div>
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                <div class ="nav-link">
+                <div class ="nav-link" style = "visibility: {{user_login}}">
                   <span>hello {{request.user}} </span>
                   <span><a href="{% url 'logout' %}">log out</a> </span>
                 </div>
-                    
-                  
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'saved' %}">Saved</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'logout' %}">Log out</a>
-                </li>
-                <li class="nav-item">
+                
+                <div class ="nav-link" style = "visibility: {{user_not_login}}">
+                  <a class="nav-link" href="{% url 'logout' %}">Log in</a>
                   <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>              
+                </div>      
               </ul>
             </div>
           </nav>
