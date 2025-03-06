@@ -1,5 +1,5 @@
 Huỳnh Hoàng Thuận 22673181
-
+Thân Trọng Tính 22665711
 tạo một website bình thường 
 
 pip install python ver 3.11.0

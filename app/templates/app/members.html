@@ -1,0 +1,21 @@
+<!-- Hiển thị số bài viết -->
+<td>
+    {% if x.user and x.user.username %}
+        {{ x.post_count }}  <!-- Hiển thị số bài viết -->
+    {% else %}
+        <span class="text-muted">Không có tài khoản</span>
+    {% endif %}
+</td>
+
+<!-- Hiển thị nút Chặn / Mở khóa -->
+<td>
+    {% if x.user and x.user.username %}
+        {% if x.user.is_active %}
+            <a href="{% url 'block_user' x.user.id %}" class="btn btn-sm btn-dark">🚫 Chặn</a>
+        {% else %}
+            <a href="{% url 'unblock_user' x.user.id %}" class="btn btn-sm btn-success">🔓 Mở khóa</a>
+        {% endif %}
+    {% else %}
+        <span class="text-muted">Không có tài khoản</span>
+    {% endif %}
+</td>

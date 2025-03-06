@@ -1,16 +1,54 @@
+from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import AbstractUser
+##
+from django.db import models
 
+class Member(models.Model):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False)
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.firstname
+
+    def is_active(self):
+        """ Trả về trạng thái active của User nếu tồn tại, ngược lại trả về False """
+        return self.user.is_active if self.user else False
+    def post_count(self):
+        if self.user:
+            return self.user.post_set.count()
+        return 0
 # Create your models here.
+from django.db import models
+from django.contrib.auth.models import User
 
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
 
 class CreateUserForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = User
-        fields = ['username','email','first_name','last_name','password1','password2']
+        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email đã tồn tại. Vui lòng chọn email khác.")
+        return email
+
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL,null=True,blank=False)
