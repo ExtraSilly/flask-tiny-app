@@ -7,9 +7,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .models import Member
-# Create your views here.
-from django.shortcuts import redirect, render
-from .models import Member
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import AdminPasswordChangeForm
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .models import Post
+from .forms import PostForm
+from django.core.paginator import Paginator
+from app.models import Post
+from django.db.models import Count
+
 
 def index(request):
     mem=Member.objects.all()
@@ -47,8 +56,6 @@ def uprec(request,id):
     return redirect("index")
 
 
-###
-
 
 def register(request):
     if request.user.is_authenticated:
@@ -75,21 +82,8 @@ def register(request):
     context = {'form': form, 'user_not_login': user_not_login, 'user_login': user_login}
     return render(request, 'app/register.html', context)
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.shortcuts import render, redirect
 
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.shortcuts import render, redirect
-
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-from django.shortcuts import render, redirect
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -111,8 +105,6 @@ def loginPage(request):
             messages.error(request, "Tên đăng nhập hoặc mật khẩu không đúng!")
 
     return render(request, "app/login.html")  # Render trang login
-
-
 
 
 def logoutPage(request):
@@ -147,18 +139,6 @@ def saved(request):
     
     return render(request, 'app/saved.html', context)
 
-#######
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Post
-from .forms import PostForm
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Post
-from .forms import PostForm
 
 @login_required
 def create_post(request):
@@ -177,15 +157,6 @@ def create_post(request):
     return render(request, 'app/create_post.html', {'form': form})
 
 
-from django.shortcuts import render
-from .models import Post  # Đảm bảo import model Post
-
-from django.shortcuts import render
-from .models import Post
-
-from django.core.paginator import Paginator
-from django.shortcuts import render
-from app.models import Post  # Thay 'myapp' bằng tên app thực tế của bạn
 
 def post_list(request):
     posts = Post.objects.all().order_by('-created_at')  # Lấy tất cả bài viết, sắp xếp mới nhất trước
@@ -216,10 +187,6 @@ def update_post(request, id):
     
     return render(request, 'app/update_post.html', {'form': form})
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Post
 
 @login_required
 def delete_post(request, id):
@@ -238,32 +205,6 @@ def delete_post(request, id):
 
     return render(request, 'app/delete_post.html', {'post': post})
 
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import messages
-from .models import Member, Post
-
-
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .models import Member, Post
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.db.models import Count
-from .models import Member, Post
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from .models import Member, Post
-
 @login_required
 def members_list(request):
     # Lấy danh sách thành viên và đảm bảo user không bị mất liên kết
@@ -276,33 +217,6 @@ def members_list(request):
             member.post_count = 0  # Nếu không có user, gán 0 bài viết
 
     return render(request, 'app/members.html', {'mem': members})
-
-
-
-
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import messages
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import messages
-from django.urls import reverse  # Thêm dòng này
-
-from django.urls import reverse  # Thêm dòng này
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
-from django.urls import reverse
-from django.contrib.auth.models import User
 
 @login_required
 def block_user(request, id):
@@ -327,25 +241,6 @@ def unblock_user(request, id):
         messages.error(request, "Bạn không có quyền thực hiện thao tác này.")
 
     return redirect(reverse('index'))  # Chuyển hướng về trang index
-
-
-
-
-
-
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import AdminPasswordChangeForm
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
-
-from django.urls import reverse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.forms import AdminPasswordChangeForm
-from django.contrib.admin.views.decorators import staff_member_required
-
-from django.contrib.auth.models import User
 
 @staff_member_required
 def reset_password(request, user_id):
